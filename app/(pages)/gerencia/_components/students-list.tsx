@@ -9,18 +9,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "@/components/ui/use-toast";
 
 export function StudentsList() {
-    const { students } = useContext(StudentContext);
-    const router = useRouter()
-
-    const handleDeleteTodo = async (students: any) => {
-        await deleteTodo({ id: students.id })
-        router.refresh()
-    
-        toast({
-          title: 'Deletion Successful',
-          description: 'The todo item has been successfully deleted.',
-        })
-    }
+    const {deleteStudent, students} = useContext(StudentContext)
     
 
     return (
@@ -35,7 +24,7 @@ export function StudentsList() {
                         <p className="w-full font-light text-center"><b>Livro:</b> <br />{student.book}</p>
                     </div>
                     
-                    <Button className="bg-red-500 hover:bg-red-700" onClick={() => handleDeleteTodo(student.id)}>Excluir <Trash2/></Button>
+                    <Button className="bg-red-500 hover:bg-red-700" onClick={() => deleteStudent(student.id)}>Excluir <Trash2/></Button>
                 </div>
             )) || <p>Nenhum aluno encontrado.</p>}
         </div>

@@ -51,7 +51,8 @@ export function StudentDialogProvider({children}: StudentProviderProps) {
     async function deleteStudent(id: string) {
         try {
             // Verifique se a URL está correta. Por exemplo, se o endpoint for /api/students/[id]
-            const response = await API.post(`/student/${id}`);
+            const response = await API.delete(`student?id=${id}`);
+            setStudents(students.filter(students => students.id !== id));
             return response.data;
         } catch (error) {
             console.error("Erro ao excluir aluno:", error);

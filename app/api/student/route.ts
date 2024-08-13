@@ -29,15 +29,12 @@ export async function DELETE(request: NextRequest) {
     try {
         const { id } = await request.json();
 
+
         if (!id) {
             return NextResponse.json("ID inválido.", { status: 400 });
         }
 
-        const student = await prisma.student.delete({
-            where: {
-                id  , // Certifique-se de que o ID está no formato correto
-            },
-        });
+        const student = await prisma.student.delete({where: {id}});
 
         return NextResponse.json({ message: "Estudante excluído com sucesso.", student });
     } catch (error) {

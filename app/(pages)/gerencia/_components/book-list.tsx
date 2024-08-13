@@ -1,6 +1,7 @@
 'use client'
 
 import { BookContext } from "@/context/book-dialog"
+import { StudentContext } from "@/context/student-context"
 import Image from "next/image"
 import { useContext } from "react"
 
