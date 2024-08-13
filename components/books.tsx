@@ -45,14 +45,14 @@ export function BooksList() {
             const { name, classe, book } = data;
             CreateStudent({name, classe, book})
             toast({
-                title: 'Sucesso ao adicionar um novo livro',
+                title: 'Sucesso ao pegar livro',
                 variant: 'default'
             })
             reset();
             router.refresh()
         } catch (error) {
             toast({
-                title: 'Erro ao tentar criar novo valor',
+                title: 'Erro ao tentar pegar um livro',
                 description: 'Tente novamente mais tarde',
                 variant: 'destructive'
             })
@@ -77,37 +77,43 @@ export function BooksList() {
                     <AlertDialog>
                         <AlertDialogTrigger asChild><Button>Pegar</Button></AlertDialogTrigger>
                         <AlertDialogContent>
-                            <AlertDialogHeader>
-                                <div className="flex justify-between items-center">
-                                    <AlertDialogTitle>{book.name}</AlertDialogTitle>
-                                    <AlertDialogCancel asChild>
-                                        <Button variant={"ghost"}>
-                                            <X/>
-                                        </Button>
-                                    </AlertDialogCancel>
-                                </div>
-                            </AlertDialogHeader>
+                            <div>
+                                <AlertDialogHeader>
+                                    <div className="flex justify-between items-center">
+                                        <AlertDialogTitle>{book.name}</AlertDialogTitle>
+                                        <AlertDialogCancel asChild>
+                                            <Button variant={"ghost"}>
+                                                <X/>
+                                            </Button>
+                                        </AlertDialogCancel>
+                                    </div>
+                                </AlertDialogHeader>
 
-                            <form className="space-y-3" onSubmit={handleSubmit(handleStudent)}>
-                                <div>
-                                    <Label>Nome Completo</Label>
-                                    <Input placeholder="Ex.: Gustavo Leal" {...register('name')} required/>
-                                </div>
-                                
-                                <div>
-                                    <Label>Turma</Label>
-                                    <Input placeholder="Ex.:8 ano A" {...register('classe')} required/>
-                                </div>
+                                <form className="space-y-3" onSubmit={handleSubmit(handleStudent)}>
+                                    <div>
+                                        <Label>Nome Completo</Label>
+                                        <Input placeholder="Ex.: Gustavo Leal" {...register('name')} required/>
+                                    </div>
+                                    
+                                    <div>
+                                        <Label>Turma</Label>
+                                        <Input placeholder="Ex.:8 ano A" {...register('classe')} required/>
+                                    </div>
 
-                                <div className="cursor-not-allowed">
-                                    <Label>Livro</Label>
-                                    <Input placeholder="Ex.:Diario de uma banana" value={book.name} {...register('book')} readOnly/>
-                                </div>
+                                    <div className="cursor-not-allowed">
+                                        <Label>Livro</Label>
+                                        <Input placeholder="Ex.:Diario de uma banana" value={book.name} {...register('book')} readOnly/>
+                                    </div>
 
-                                <Button type="submit" disabled={isLoading}>
-                                    Finalizar
-                                </Button>
-                            </form>
+                                    <Button type="submit" disabled={isLoading}>
+                                        Finalizar
+                                    </Button>
+                                </form>
+                            </div>
+                            <div className="flex space-x-3">
+                                <Image src={book.image} alt="" width={200} height={300}  className="w-1/3"/>
+                                <p>{book.description}</p>
+                            </div>
                         </AlertDialogContent>
                     </AlertDialog>
                 </div>

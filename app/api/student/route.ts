@@ -27,14 +27,16 @@ export async function GET() {
 
 export async function DELETE(request: NextRequest) {
     try {
-        const { id } = await request.json();
-
+        // Extraindo o id da URL da requisição
+        const url = new URL(request.url);
+        const id = url.searchParams.get('id');
 
         if (!id) {
             return NextResponse.json("ID inválido.", { status: 400 });
         }
 
-        const student = await prisma.student.delete({where: {id}});
+        // Excluindo o estudante usando Prisma
+        const student = await prisma.student.delete({ where: { id } });
 
         return NextResponse.json({ message: "Estudante excluído com sucesso.", student });
     } catch (error) {
