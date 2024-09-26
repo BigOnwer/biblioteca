@@ -35,6 +35,7 @@ model Book {
   image        String
   description  String
   position     String
+  genre        String?
   createdAt    DateTime  @default(now())
 }
 

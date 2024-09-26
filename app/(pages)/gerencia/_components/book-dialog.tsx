@@ -1,4 +1,4 @@
-import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogTrigger, AlertDialogTitle, AlertDialogHeader, AlertDialogDescription } from "@/components/ui/alert-dialog";
+import { AlertDialog, AlertDialogCancel, AlertDialogContent, AlertDialogTrigger, AlertDialogTitle, AlertDialogHeader } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,50 +9,55 @@ import * as z from 'zod';
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "@/components/ui/use-toast";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Link from "next/link";
 
 const NewCardFormSchema = z.object({
     name: z.string(),
     description: z.string(),
     image: z.string(),
     position: z.string(),
-})
-
-type newCardFormInput = z.infer<typeof NewCardFormSchema>
+    genre: z.string(),
+});
 
 export function BookDialog() {
+    const form = useForm<z.infer<typeof NewCardFormSchema>>({
+        resolver: zodResolver(NewCardFormSchema),
+        defaultValues: {
+          name: "",
+          description: "",
+          image: "",
+          position: "",
+          genre: "",
+        },
+    });
+
     const { CreateBook } = useContext(BookContext);
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const {
-        register,
-        handleSubmit,
-        reset,
-    } = useForm<newCardFormInput>({
-        resolver: zodResolver(NewCardFormSchema),
-    });
-
-    async function handleRegister(data: newCardFormInput) {
+    async function handleRegister(data: z.infer<typeof NewCardFormSchema>) {
         setIsLoading(true);
         try {
-            const { name, description, image, position } = data;
-            await CreateBook({ name, description, image, position });
+            const { name, description, image, position, genre } = data;
+            await CreateBook({ name, description, image, position, genre });
             toast({
                 title: 'Sucesso ao adicionar um novo livro',
-                variant: 'default'
-            })
-            reset();
+                variant: 'default',
+            });
+            form.reset();
         } catch (error) {
             toast({
                 title: 'Erro ao tentar criar novo valor',
                 description: 'Tente novamente mais tarde',
-                variant: 'destructive'
-            })
+                variant: 'destructive',
+            });
             console.log(error);
         }
         setIsLoading(false);
     }
 
-    return(
+    return (
         <AlertDialog>
             <AlertDialogTrigger asChild><Button>Adicionar Livro</Button></AlertDialogTrigger>
             <AlertDialogContent>
@@ -61,38 +66,97 @@ export function BookDialog() {
                         <AlertDialogTitle>Quer adicionar um novo livro?</AlertDialogTitle>
                         <AlertDialogCancel asChild>
                             <Button variant={"ghost"}>
-                                <X/>
+                                <X />
                             </Button>
                         </AlertDialogCancel>
                     </div>
                 </AlertDialogHeader>
 
-                <form className="space-y-3" onSubmit={handleSubmit(handleRegister)}>
-                    <div>
-                        <Label>Nome</Label>
-                        <Input placeholder="Nome do livro" {...register('name')} required/>
-                    </div>
-                    
-                    <div>
-                        <Label>Descricao</Label>
-                        <Input placeholder="Descricao do livro" {...register('description')} required/>
-                    </div>
+                <Form {...form}>
+                    <form className="space-y-3" onSubmit={form.handleSubmit(handleRegister)}>
+                        <FormField
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Nome</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Nome do livro" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
-                    <div>
-                        <Label>Capa</Label>
-                        <Input placeholder="Capa do livro"  {...register('image')} required/>
-                    </div>
+                        <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Descrição</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Descrição do livro" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
-                    <div>
-                        <Label>Posicao</Label>
-                        <Input placeholder="Posicao do livro" {...register('position')} required/>
-                    </div>
+                        <FormField
+                            control={form.control}
+                            name="image"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Capa</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Capa do livro" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
 
-                    <Button type="submit" disabled={isLoading}>
-                        Adicionar
-                    </Button>
-                </form>
+                        <FormField
+                            control={form.control}
+                            name="position"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Posição</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="Posição do livro" {...field} />
+                                    </FormControl>
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="genre"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Genero</FormLabel>
+                                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                        <FormControl>
+                                        <SelectTrigger>
+                                            <SelectValue placeholder="Selecione o genero do livro" />
+                                        </SelectTrigger>
+                                        </FormControl>
+                                        <SelectContent>
+                                            <SelectItem value="Aventura">Aventura</SelectItem>
+                                            <SelectItem value="Romance">Romance</SelectItem>
+                                            <SelectItem value="Drama">Drama</SelectItem>
+                                            <SelectItem value="Misterio">Misterio</SelectItem>
+                                            <SelectItem value="Fantasia">Fantasia</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <FormMessage />
+                                </FormItem>
+                                )}
+                                />
+
+                        <Button type="submit" disabled={isLoading}>
+                            Adicionar
+                        </Button>
+                    </form>
+                </Form>
             </AlertDialogContent>
         </AlertDialog>
-    )
+    );
 }

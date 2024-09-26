@@ -9,6 +9,7 @@ interface Book {
     description: string
     image: string
     position: string
+    genre: string
     createdAt: string
 }
 
@@ -17,6 +18,7 @@ interface CreateBookValueProps {
     description: string
     image: string
     position: string
+    genre: string
 }
 
 interface BookContextType {
@@ -35,14 +37,15 @@ export function BookDialogProvider({children}: BookProviderProps) {
     const [book, setBook] = useState<Book[]>([])
 
     async function CreateBook(data: CreateBookValueProps) {
-        const {name, description, image, position} = data
+        const {name, description, image, position, genre} = data
 
         try{
             const response = await API.post('books', {
                 name,
                 description,
                 image,
-                position
+                position,
+                genre
             })
             setBook((state) => [response.data, ...state])
         } catch(error) {

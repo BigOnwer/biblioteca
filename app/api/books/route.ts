@@ -3,7 +3,7 @@ import { db as prisma } from "@/lib/database"
 
 export async function POST(request: NextRequest) {
     const data = await request.json()
-    const { name, description, position, image} = data
+    const { name, description, position, image, genre} = data
 
     if(!name || !description || !position || !image){
         return NextResponse.json("Dados inválidos.", { status: 400})
@@ -14,7 +14,8 @@ export async function POST(request: NextRequest) {
             name,
             description,
             position,
-            image
+            image,
+            genre
         }
     })
 
